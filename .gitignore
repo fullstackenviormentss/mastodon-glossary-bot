@@ -1,3 +1,5 @@
 .ipynb_checkpoints
 RCAUAF
-*.txt
+bot_user.txt
+clientcred.txt
+usercred.txt
