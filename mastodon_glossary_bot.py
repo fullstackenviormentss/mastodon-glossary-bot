@@ -53,7 +53,7 @@ def process_notification(content):
                 rows = RCAUAF[RCAUAF.key == a]
                 definitions = list(rows.definition)
                 for index, row in rows.iterrows():
-                    toot += '{} = {}\n\n'.format(row['term'], row['definition'].encode('latin-1').decode('unicode_escape'))
+                    toot += '{} = {}\n\n'.format(row['term'], row['definition'])
         else:
             toot += "Je n'ai rien trouvé :("
         toot = toot[:499]
