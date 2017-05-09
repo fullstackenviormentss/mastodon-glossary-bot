@@ -5,4 +5,4 @@
 3. Copy `.env.sample` to `.env` and modify it appropriately.
 4. Set up the app : ``echo `cat .env | xargs -d'\n'` python scripts/setup_app.py | sh``
 5. Test the app : ``echo `cat .env | xargs -d'\n'` python mastodon_glossary_bot.py | sh``
-6. Deploy like any heroku app. Set up the configuration with `cat .env | xargs -d'\n' heroku config:set`
+6. (optional) Deploy like any heroku app. Set up the configuration with ``echo heroku config:set `cat .env | xargs -d'\n'` | sh``
