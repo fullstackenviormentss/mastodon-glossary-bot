@@ -1,17 +1,27 @@
 import json
 import re
+import os
+import subprocess
 
 import pandas as pd
 from mastodon import Mastodon
 
 
 def load_acronyms():
+    if not os.path.isdir('RCAUAF'):
+        print('Acronyms not found, cloning...')
+        subprocess.run(['git', 'clone', 'https://github.com/michelbl/RCAUAF.git'])
+    else:
+        subprocess.run(['git', '-C', 'RCAUAF', 'pull', 'origin', 'master'])
+
     RCAUAF_filename = 'RCAUAF/RCAUAF.csv'
     RCAUAF = pd.read_csv(RCAUAF_filename)
     RCAUAF['key'] = RCAUAF.term.apply(str.upper)
     RCAUAF
     RCAUAF_keys = set(RCAUAF.key)
-    
+
+    print('Loading of acronyms is done !')
+
     return RCAUAF, RCAUAF_keys
 
 RCAUAF, RCAUAF_keys = load_acronyms()
