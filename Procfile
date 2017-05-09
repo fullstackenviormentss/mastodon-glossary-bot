@@ -1,1 +1,1 @@
-web: python mastodon_glossary_bot.py
+worker: python mastodon_glossary_bot.py
