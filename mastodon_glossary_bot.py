@@ -28,8 +28,9 @@ RCAUAF, RCAUAF_keys = load_acronyms()
 
 
 mastodon = Mastodon(
-    client_id='clientcred.txt',
-    access_token='usercred.txt',
+    client_id=os.environ['CLIENT_ID'],
+    client_secret=os.environ['CLIENT_SECRET'],
+    access_token=os.environ['ACCESS_TOKEN'], 
     api_base_url='https://mastodon.etalab.gouv.fr',
 )
 
