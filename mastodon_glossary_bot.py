@@ -8,23 +8,23 @@ from mastodon import Mastodon
 
 
 def load_acronyms():
-    if not os.path.isdir('RCAUAF'):
+    if not os.path.isdir('glossary'):
         print('Acronyms not found, cloning...')
-        subprocess.run(['git', 'clone', 'https://github.com/michelbl/RCAUAF.git'])
+        subprocess.run(['git', 'clone', os.environ['GLOSSARY_REPO'], 'glossary'])
     else:
-        subprocess.run(['git', '-C', 'RCAUAF', 'pull', 'origin', 'master'])
+        subprocess.run(['git', '-C', 'glossary', 'pull', 'origin', 'master'])
 
-    RCAUAF_filename = 'RCAUAF/RCAUAF.csv'
-    RCAUAF = pd.read_csv(RCAUAF_filename)
-    RCAUAF['key'] = RCAUAF.term.apply(str.upper)
-    RCAUAF
-    RCAUAF_keys = set(RCAUAF.key)
+    glossary_filename = 'glossary/glossary.csv'
+    glossary = pd.read_csv(glossary_filename)
+    glossary['key'] = glossary.term.apply(str.upper)
+    glossary
+    glossary_keys = set(glossary.key)
 
     print('Loading of acronyms is done !')
 
-    return RCAUAF, RCAUAF_keys
+    return glossary, glossary_keys
 
-RCAUAF, RCAUAF_keys = load_acronyms()
+glossary, glossary_keys = load_acronyms()
 
 
 mastodon = Mastodon(
@@ -45,17 +45,17 @@ def process_notification(content):
         texte_html = content['status']['content']
         texte = re.sub(r'<[^>]*>', '', texte_html)
         words = sorted(set(texte.upper().split(' ')))
-        acronyms = [w for w in words if w in RCAUAF_keys]
+        acronyms = [w for w in words if w in glossary_keys]
         
         toot = '@{}\n\n'.format(content['account']['username'])
         if acronyms:
             for a in acronyms:
-                rows = RCAUAF[RCAUAF.key == a]
+                rows = glossary[glossary.key == a]
                 definitions = list(rows.definition)
                 for index, row in rows.iterrows():
                     toot += '{} = {}\n\n'.format(row['term'], row['definition'])
         else:
-            toot += "Je n'ai rien trouvé :("
+            toot += os.environ['MESSAGE_NOT_FOUND']
         toot = toot[:499]
         
         mastodon.status_post(
